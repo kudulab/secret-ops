@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+if [[ ! -f ./releaser ]];then
+  wget --quiet http://http.archive.ai-traders.com/releaser/1.0.3/releaser
+fi
+source ./releaser
+releaser_init
+
+command="$1"
+case "${command}" in
+  set_version)
+      if [[ -n "$2" ]]; then
+        next_version="$2"
+        set_version_in_changelog "${changelog_file}" "${next_version}"
+        set_next_oversion "${next_version}"
+      else
+        next_version=$(get_next_oversion)
+        set_version_in_changelog "${changelog_file}" "${next_version}"
+      fi
+      exit $?
+      ;;
+  verify_version)
+      verify_version_for_release
+      exit $?
+      ;;
+  release)
+      verify_version_for_release
+      git_tag_from_oversion
+      old_version=$(get_next_oversion)
+      next_version=$(bump_patch_version "${old_version}")
+      set_next_oversion "${next_version}"
+      exit $?
+      ;;
+  publish)
+      # publish the just released version
+      version=$(get_last_git_tagged_version)
+      export OS_TENANT_NAME=ait-production
+      export OS_PROJECT_NAME=ait-production
+      next_version=$(get_next_oversion)
+      file="src/secret-ops"
+      obj_name="${version}/secret-ops"
+      ide --idefile Idefile.pyos "swift upload --object-name $obj_name secret-ops $file"
+      ;;
+  *)
+      echo "Invalid command: '${command}'"
+      exit 1
+      ;;
+esac
+set +e

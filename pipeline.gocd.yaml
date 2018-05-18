@@ -6,20 +6,37 @@ pipelines:
       git:
         git: "git@git.ai-traders.com:platform/secret-ops.git"
         branch: master
-        blacklist:
-          - "doc/**/*"
-          - "**/*.md"
     stages:
-      - first_stage:
+      - test:
           clean_workspace: true
           jobs:
-            first_job:
-              resources:
-                - docker
-                - small
+            verify_version:
+              elastic_profile_id: w.c1.m1024.e5
               tasks:
-               - exec:
-                  command: /bin/bash
-                  arguments:
-                    - -c
-                    - "echo \"running custom first stage\" && cat README.md"
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks verify_version
+      - release:
+          clean_workspace: true
+          jobs:
+            code:
+              elastic_profile_id: w.c1.m1024.e5
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks release
+      - publish:
+          clean_workspace: true
+          jobs:
+            code:
+              elastic_profile_id: w.c1.m1024.e5
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks publish
