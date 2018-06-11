@@ -4,10 +4,20 @@
 
 ```
 if [[ ! -f ./secret-ops ]]; then
-  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.1.0/secret-ops || { echo "cannot download secret-ops"; }
+  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.2.0/secret-ops || { echo "cannot download secret-ops"; }
 fi
 source ./secret-ops
 ```
+
+### encrypt_with_gocd
+
+```
+$ encrypt_with_gocd "my-secret-password"
+$ echo ${secured_value}
+"+D6rVPSCLOroDzMVXgumeOoOO3dphWdK"
+```
+
+Asks GoCD server to encrypt a string.
 
 ### generate_certs_token
 
