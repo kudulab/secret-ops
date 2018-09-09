@@ -32,15 +32,20 @@ case "${command}" in
       set_next_oversion "${next_version}"
       exit $?
       ;;
-  publish)
+  _publish)
       # publish the just released version
       version=$(get_last_git_tagged_version)
       export OS_TENANT_NAME=ait-production
       export OS_PROJECT_NAME=ait-production
-      next_version=$(get_next_oversion)
       file="src/secret-ops"
       obj_name="${version}/secret-ops"
-      ide --idefile Idefile.pyos "swift upload --object-name $obj_name secret-ops $file"
+      swift upload --object-name $obj_name secret-ops $file
+      file="src/setup-kube.sh"
+      obj_name="${version}/setup-kube"
+      swift upload --object-name $obj_name secret-ops $file
+      ;;
+  publish)
+      ide --idefile Idefile.pyos "./tasks _publish"
       ;;
   *)
       echo "Invalid command: '${command}'"

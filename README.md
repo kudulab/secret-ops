@@ -50,3 +50,21 @@ And your pipeline should have secure_variables at some point:
 secure_variables:
   VAULT_TOKEN: "will-be-replaced"
 ```
+
+# setup-kube
+
+`setup-kube` is a script that will configure current host to have access to k8s.
+Usage:
+```
+./setup-kube k8s-user-name
+```
+You need:
+ - vault binary
+ - sufficient permissions to vault and ~/.vault-token
+ - trust ait CA
+
+The script provisions:
+ - `~/.kube/${k8s_user}`
+ - `~/.kube/${k8s_user}.crt`
+ - `~/.kube/ca.crt`
+ - `~/.kube/config`
