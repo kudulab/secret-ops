@@ -11,9 +11,11 @@ mkdir -p ~/.kube
 
 export VAULT_ADDR="${VAULT_ADDR:-https://vault.ai-traders.com:8200}"
 
-vault kv get --field=key "secret/k8s/${k8s_user}" > ~/.kube/${k8s_user}
+vault kv get --field=key "secret/k8s/${k8s_user}" > ~/.kube/${k8s_user}.key
 vault kv get --field=user_crt "secret/k8s/${k8s_user}" > ~/.kube/${k8s_user}.crt
 vault kv get --field=ca "secret/k8s/${k8s_user}" > ~/.kube/ca.crt
+
+chmod -c 0600 ~/.kube/${k8s_user}.key
 
 cat << EOF > ~/.kube/config
 apiVersion: v1
