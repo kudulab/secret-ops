@@ -1,3 +1,8 @@
+### 0.3.3 (2018-Dec-07)
+
+* add function: encrypt_with_gocd_base
+* add tests
+
 ### 0.3.2 (2018-Nov-19)
 
 * add functions encrypt_with_gocd2 and generate_certs_token2

@@ -24,6 +24,18 @@ case "${command}" in
       verify_version_for_release
       exit $?
       ;;
+  test)
+      bats test/bats/
+      exit $?
+      ;;
+  generate_vault_token)
+      set -e
+      vault_token=$(vault token create -renewable=true -period=78h -policy=gocd -field token)
+      secured_token_gocd=$(source src/secret-ops && encrypt_with_gocd2 "${vault_token}")
+      echo "Generated token: ${vault_token} and encrypted by GoCD server"
+      echo "Replacing pipeline config with VAULT_TOKEN: ${secured_token_gocd}"
+      find ./ -name "*.gocd.yaml" -exec sed -i -E "s#VAULT_TOKEN\:.*#VAULT_TOKEN: ${secured_token_gocd}#g" {} \;
+      ;;
   release)
       verify_version_for_release
       git_tag_from_oversion
