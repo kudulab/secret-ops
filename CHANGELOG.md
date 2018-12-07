@@ -1,3 +1,7 @@
+### 0.4.0 (2018-Dec-07)
+
+ * added preview of python functions
+
 ### 0.3.3 (2018-Dec-07)
 
 * add function: encrypt_with_gocd_base

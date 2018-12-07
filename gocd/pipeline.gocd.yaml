@@ -10,9 +10,9 @@ pipelines:
       - test:
           clean_workspace: true
           secure_variables:
-            VAULT_TOKEN: "AES:Ps0fk23o8C+TvBFA5g2gHQ==:nnmONtvAN86X2tIhGW15ESgy0IPZFZYJuMg46FOgorGLnZ4/6XCN0BWvo5/YPE3y"
+            VAULT_TOKEN: "AES:u0YWlDl7oEOGdGLUqj5tWg==:88a6Iw6iHaPqyKrs9KcJPLa4gybQQPd5IHnP4O3Cz4CJY+e1gAd3sGAtf2FT0riY"
           jobs:
-            test:
+            bash:
               elastic_profile_id: w.c1.m1024.e5
               tasks:
                 - exec:
@@ -24,7 +24,20 @@ pipelines:
                     command: /bin/bash
                     arguments:
                       - -c
-                      - ./tasks test
+                      - ./tasks test_bash
+            python:
+              elastic_profile_id: w.c1.m1024.e5
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks verify_version
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks test_python
       - release:
           clean_workspace: true
           jobs:

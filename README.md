@@ -4,7 +4,10 @@
 
 ```
 if [[ ! -f ./secret-ops ]]; then
-  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.3.1/secret-ops || { echo "cannot download secret-ops"; }
+  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.4.0/secret-ops || { echo "cannot download secret-ops"; }
+fi
+if [[ ! -f ./secret-ops.py ]]; then
+  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.4.0/secret-ops.py || { echo "cannot download secret-ops.py"; }
 fi
 source ./secret-ops
 ```
@@ -68,3 +71,46 @@ The script provisions:
  - `~/.kube/${k8s_user}.crt`
  - `~/.kube/ca.crt`
  - `~/.kube/config`
+
+# Python
+
+Python is in preview to see if it works better for scripting than bash.
+To provide compatibility with bash and existing tasks, there is a CLI mode which allows to use `secret_ops.py`
+also from command line. To see usage just run
+```bash
+python3 secret_ops.py
+```
+
+Python script may only depend on packages specified by http://gogs.ai-traders.com/platform/python-ops
+
+By default logging is redirected to `secret_ops.log` so that output of commands can be captured with bash.
+You can change log level in any command with `--log-level`, e.g.
+```bash
+python3 secret_ops.py --log-level debug encrypt-gocd --secret a --gocd-server go1
+```
+
+Example of mixed usage:
+```bash
+vault_token=$(vault token create -renewable=true -period=78h -policy=gocd -field token)
+secured_token_gocd=$(python3 secret_ops.py encrypt-gocd --secret "${vault_token}" --gocd-server go1)
+```
+
+For full python usage I recommend following construct in `tasks`:
+```bash
+  *)
+      python3 tasks.py "$@"
+      exit $?
+      ;;
+```
+And use `tasks.py` to implement remaining tasks in python (this repository is an example of such setup)
+```python
+#!/usr/bin/env python3
+
+import logging
+import sys
+import click
+
+import secret_ops
+
+# Tasks using Click ...
+```

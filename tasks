@@ -24,17 +24,13 @@ case "${command}" in
       verify_version_for_release
       exit $?
       ;;
-  test)
+  test_bash)
       bats test/bats/
       exit $?
       ;;
-  generate_vault_token)
-      set -e
-      vault_token=$(vault token create -renewable=true -period=78h -policy=gocd -field token)
-      secured_token_gocd=$(source src/secret-ops && encrypt_with_gocd2 "${vault_token}")
-      echo "Generated token: ${vault_token} and encrypted by GoCD server"
-      echo "Replacing pipeline config with VAULT_TOKEN: ${secured_token_gocd}"
-      find ./ -name "*.gocd.yaml" -exec sed -i -E "s#VAULT_TOKEN\:.*#VAULT_TOKEN: ${secured_token_gocd}#g" {} \;
+  test_python)
+      python3 test_secret_ops.py
+      exit $?
       ;;
   release)
       verify_version_for_release
@@ -52,6 +48,9 @@ case "${command}" in
       file="src/secret-ops"
       obj_name="${version}/secret-ops"
       swift upload --object-name $obj_name secret-ops $file
+      file="secret-ops.py"
+      obj_name="${version}/secret-ops.py"
+      swift upload --object-name $obj_name secret-ops $file
       file="src/setup-kube.sh"
       obj_name="${version}/setup-kube"
       swift upload --object-name $obj_name secret-ops $file
@@ -60,8 +59,8 @@ case "${command}" in
       ide --idefile Idefile.pyos "./tasks _publish"
       ;;
   *)
-      echo "Invalid command: '${command}'"
-      exit 1
+      python3 tasks.py "$@"
+      exit $?
       ;;
 esac
 set +e
