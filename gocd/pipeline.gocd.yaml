@@ -52,7 +52,7 @@ pipelines:
       - publish:
           clean_workspace: true
           jobs:
-            code:
+            swift:
               elastic_profile_id: w.c1.m1024.e5
               tasks:
                 - exec:

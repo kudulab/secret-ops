@@ -6,8 +6,8 @@
 if [[ ! -f ./secret-ops ]]; then
   wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.4.0/secret-ops || { echo "cannot download secret-ops"; }
 fi
-if [[ ! -f ./secret-ops.py ]]; then
-  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.4.0/secret-ops.py || { echo "cannot download secret-ops.py"; }
+if [[ ! -f ./secret_ops.py ]]; then
+  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.4.0/secret_ops.py || { echo "cannot download secret_ops.py"; }
 fi
 source ./secret-ops
 ```

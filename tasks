@@ -48,8 +48,8 @@ case "${command}" in
       file="src/secret-ops"
       obj_name="${version}/secret-ops"
       swift upload --object-name $obj_name secret-ops $file
-      file="secret-ops.py"
-      obj_name="${version}/secret-ops.py"
+      file="secret_ops.py"
+      obj_name="${version}/secret_ops.py"
       swift upload --object-name $obj_name secret-ops $file
       file="src/setup-kube.sh"
       obj_name="${version}/setup-kube"

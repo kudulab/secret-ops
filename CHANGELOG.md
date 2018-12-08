@@ -1,3 +1,7 @@
+### 0.4.1 (2018-Dec-08)
+
+ fix publish task
+
 ### 0.4.0 (2018-Dec-07)
 
  * added preview of python functions
