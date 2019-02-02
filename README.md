@@ -4,10 +4,10 @@
 
 ```
 if [[ ! -f ./secret-ops ]]; then
-  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.4.0/secret-ops || { echo "cannot download secret-ops"; }
+  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.5.0/secret-ops || { echo "cannot download secret-ops"; }
 fi
 if [[ ! -f ./secret_ops.py ]]; then
-  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.4.0/secret_ops.py || { echo "cannot download secret_ops.py"; }
+  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.5.0/secret_ops.py || { echo "cannot download secret_ops.py"; }
 fi
 source ./secret-ops
 ```
@@ -25,7 +25,7 @@ Asks GoCD server to encrypt a string.
 ### generate_certs_token
 
 ```
-generate_certs_token
+secret_ops::generate_certs_token_gocd_top
 ```
 
 *No arguments*
@@ -35,18 +35,10 @@ Generates token for gocd to use for generating certificates.
 ### insert_vault_token_gocd_yaml
 
 ```
-insert_vault_token_gocd_yaml
+secret_ops::insert_vault_token_gocd_yaml "${secured_token_gocd}"
 ```
 
-*No arguments*
-
-Puts previously generated and secuted vault token into gocd.yaml files.
-
-**Remarks:** It is meant to be used right after `generate_certs_token`:
-```
-generate_certs_token
-insert_vault_token_gocd_yaml
-```
+Puts previously generated and secured vault token "${secured_token_gocd}" into gocd.yaml files.
 
 And your pipeline should have secure_variables at some point:
 ```yaml

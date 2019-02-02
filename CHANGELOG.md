@@ -1,3 +1,7 @@
+### 0.5.0 (2019-Feb-02)
+
+* add functions with prefix: `secret_ops::`
+
 ### 0.4.1 (2018-Dec-08)
 
  fix publish task
