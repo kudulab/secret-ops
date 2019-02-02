@@ -7,18 +7,19 @@ fi
 if [[ -f ./releaser ]]; then
   source ./releaser
 fi
+source ./src/secret-ops
 
 command="$1"
 case "${command}" in
   set_version)
       if [[ -n "$2" ]]; then
         next_version="$2"
-        releaser::set_version_in_changelog "${changelog_file}" "${next_version}"
         releaser::set_next_oversion "${next_version}"
       else
         next_version=$(releaser::get_next_oversion)
-        releaser::set_version_in_changelog "${changelog_file}" "${next_version}"
       fi
+      releaser::set_version_in_changelog "${changelog_file}" "${next_version}"
+      ./tasks generate_vault_token
       exit $?
       ;;
   verify_version)
@@ -58,6 +59,13 @@ case "${command}" in
       ;;
   publish)
       ide --idefile Idefile.pyos "./tasks _publish"
+      ;;
+  generate_vault_token)
+      set -e
+      vault_token=$(vault token create -ttl=48h -policy=gocd -field token)
+      secured_token_gocd=$(secret_ops::encrypt_with_gocd_top "${vault_token}")
+      echo "Generated token: ${vault_token} and encrypted by GoCD server"
+      secret_ops::insert_vault_token_gocd_yaml "${secured_token_gocd}"
       ;;
   *)
       python3 tasks.py "$@"

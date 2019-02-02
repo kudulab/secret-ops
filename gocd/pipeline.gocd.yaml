@@ -10,7 +10,7 @@ pipelines:
       - test:
           clean_workspace: true
           secure_variables:
-            VAULT_TOKEN: "AES:u0YWlDl7oEOGdGLUqj5tWg==:88a6Iw6iHaPqyKrs9KcJPLa4gybQQPd5IHnP4O3Cz4CJY+e1gAd3sGAtf2FT0riY"
+            VAULT_TOKEN: "AES:skyojeCb6SrYzsi0RRzX3A==:CqwuecNoEe5elpSx7bC+g5LBKCb9Y7afVG3jmF4n+3U7WnNxpOCcc7an73H03uH0"
           jobs:
             bash:
               elastic_profile_id: w.c1.m1024.e5
