@@ -1,3 +1,7 @@
+### 0.6.2 (2019-Apr-22)
+
+ * more flexible user options for gocd encryption in encrypt_with_gocd_top
+
 ### 0.6.1 (2019-Apr-22)
 
  * setup publish task

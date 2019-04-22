@@ -10,7 +10,7 @@ load '/opt/bats-assert/load.bash'
 }
 
 @test "secret_ops::encrypt_with_gocd_top fails if USER cannot read secret" {
-  run /bin/bash -c "source src/secret-ops && USER=dummy secret_ops::encrypt_with_gocd_top mydata"
+  run /bin/bash -c "source src/secret-ops && secret_ops::encrypt_with_gocd_top mydata dummy"
   # do not test for output, because it may be different on workstation and on
   # go-agent (due to different vault policies)
   assert_equal "$status" 1
