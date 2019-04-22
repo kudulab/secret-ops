@@ -1,6 +1,8 @@
 /releaser
 /secret_ops.log
-
+/.idea/
+ops/
+/pkg/
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
 
@@ -126,3 +128,4 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/python
 /gocd/pipeline.gocd.yaml.bak
+/secret-ops.tar.gz

@@ -1,11 +1,11 @@
+format_version: 3
 pipelines:
   secret-ops:
     group: platform
     label_template: "${git[:8]}"
     materials:
       git:
-        git: "git@git.ai-traders.com:platform/secret-ops.git"
-        branch: master
+        type: configrepo
     stages:
       - test:
           clean_workspace: true
@@ -19,20 +19,10 @@ pipelines:
                     command: /bin/bash
                     arguments:
                       - -c
-                      - ./tasks verify_version
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
                       - ./tasks test_bash
             python:
               elastic_profile_id: w.c1.m1024.e5
               tasks:
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks verify_version
                 - exec:
                     command: /bin/bash
                     arguments:

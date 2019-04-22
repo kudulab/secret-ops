@@ -1,22 +1,28 @@
 # secret-ops
 
+These are common functions to handle secrets using vault and GoCD.
+This is published only as a reference, it will have little usability in other infrastructure.
+
 ## Usage
 
-```
-if [[ ! -f ./secret-ops ]]; then
-  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.5.0/secret-ops || { echo "cannot download secret-ops"; }
+```bash
+SECRET_OPS_VERSION="0.6.0"
+SECRET_OPS_FILE="ops/secret-ops"
+SECRET_OPS_TAR_FILE="ops/secret-ops-${SECRET_OPS_VERSION}.tar.gz"
+
+mkdir -p ops
+if [[ ! -f $SECRET_OPS_TAR_FILE ]];then
+  wget --quiet -O $SECRET_OPS_TAR_FILE https://github.com/kudulab/secret-ops/releases/download/${SECRET_OPS_VERSION}/secret-ops.tar.gz
+  tar -xf $SECRET_OPS_TAR_FILE -C ops
 fi
-if [[ ! -f ./secret_ops.py ]]; then
-  wget --quiet http://os2.ai-traders.com:6780/swift/v1/secret-ops/0.5.0/secret_ops.py || { echo "cannot download secret_ops.py"; }
-fi
-source ./secret-ops
+source $SECRET_OPS_FILE
 ```
 
-### encrypt_with_gocd
+### encrypt_with_gocd_top
 
 ```
-$ encrypt_with_gocd "my-secret-password"
-$ echo ${secured_value}
+$ secured_token_gocd=$(secret_ops::encrypt_with_gocd_top "${secret_value}")
+$ echo ${secured_token_gocd}
 "+D6rVPSCLOroDzMVXgumeOoOO3dphWdK"
 ```
 
@@ -40,7 +46,7 @@ secret_ops::insert_vault_token_gocd_yaml "${secured_token_gocd}"
 
 Puts previously generated and secured vault token "${secured_token_gocd}" into gocd.yaml files.
 
-And your pipeline should have secure_variables at some point:
+It expects that our pipeline should have secure_variables with `VAULT_TOKEN`:
 ```yaml
 secure_variables:
   VAULT_TOKEN: "will-be-replaced"
@@ -73,7 +79,7 @@ also from command line. To see usage just run
 python3 secret_ops.py
 ```
 
-Python script may only depend on packages specified by http://gogs.ai-traders.com/platform/python-ops
+Python script may only depend on packages specified by [ops-base](https://github.com/kudulab/ops-base).
 
 By default logging is redirected to `secret_ops.log` so that output of commands can be captured with bash.
 You can change log level in any command with `--log-level`, e.g.
@@ -91,7 +97,6 @@ For full python usage I recommend following construct in `tasks`:
 ```bash
   *)
       python3 tasks.py "$@"
-      exit $?
       ;;
 ```
 And use `tasks.py` to implement remaining tasks in python (this repository is an example of such setup)
@@ -102,7 +107,7 @@ import logging
 import sys
 import click
 
-import secret_ops
+from ops.secret_ops import *
 
 # Tasks using Click ...
 ```

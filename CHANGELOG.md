@@ -1,3 +1,10 @@
+### 0.6.0 (2019-Apr-22)
+
+* removed obsolete functions without ::
+* publish to github
+* added tar.gz release with all files
+* recommend install in ops directory
+
 ### 0.5.0 (2019-Feb-02)
 
 * add functions with prefix: `secret_ops::`

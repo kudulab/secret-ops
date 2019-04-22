@@ -1,75 +1,76 @@
 #!/bin/bash
 
 set -Eeo pipefail
-if [[ ! -f ./releaser ]]; then
-  wget --quiet http://http.archive.ai-traders.com/releaser/1.1.0/releaser || { echo "Cannot download releaser, ignoring."; }
+
+RELEASER_VERSION="2.0.0"
+RELEASER_FILE="ops/releaser-${RELEASER_VERSION}"
+
+mkdir -p ops
+if [[ ! -f $RELEASER_FILE ]];then
+  wget --quiet -O $RELEASER_FILE https://github.com/kudulab/releaser/releases/download/${RELEASER_VERSION}/releaser
 fi
-if [[ -f ./releaser ]]; then
-  source ./releaser
-fi
+source $RELEASER_FILE
+
 source ./src/secret-ops
 
 command="$1"
 case "${command}" in
   set_version)
-      if [[ -n "$2" ]]; then
-        next_version="$2"
-        releaser::set_next_oversion "${next_version}"
-      else
-        next_version=$(releaser::get_next_oversion)
-      fi
-      releaser::set_version_in_changelog "${changelog_file}" "${next_version}"
-      ./tasks generate_vault_token
-      exit $?
+      releaser::bump_changelog_version "$2" "$3"
       ;;
   verify_version)
       releaser::verify_version_for_release
-      exit $?
       ;;
   test_bash)
       bats test/bats/
-      exit $?
       ;;
   test_python)
       python3 test_secret_ops.py
-      exit $?
+      ;;
+  test)
+      ./tasks test_bash
+      ./tasks test_python
+      ;;
+  package)
+      rm -rf pkg/
+      mkdir -p pkg/
+      cp src/* pkg/
+      cp secret_ops.py pkg/
+      cd pkg
+      tar -cvzf ../secret-ops.tar.gz *
       ;;
   release)
       releaser::verify_version_for_release
-      releaser::git_tag_from_oversion
-      old_version=$(releaser::get_next_oversion)
-      next_version=$(releaser::bump_patch_version "${old_version}")
-      releaser::set_next_oversion "${next_version}"
-      exit $?
-      ;;
-  _publish)
-      # publish the just released version
-      version=$(releaser::get_last_git_tagged_version)
-      export OS_TENANT_NAME=ait-production
-      export OS_PROJECT_NAME=ait-production
-      file="src/secret-ops"
-      obj_name="${version}/secret-ops"
-      swift upload --object-name $obj_name secret-ops $file
-      file="secret_ops.py"
-      obj_name="${version}/secret_ops.py"
-      swift upload --object-name $obj_name secret-ops $file
-      file="src/setup-kube.sh"
-      obj_name="${version}/setup-kube"
-      swift upload --object-name $obj_name secret-ops $file
+      releaser::git_tag_from_changelog
       ;;
   publish)
-      ide --idefile Idefile.pyos "./tasks _publish"
+      # publish the just released version
+      ./tasks package
+      VERSION=$(releaser::get_last_git_tagged_version)
+      releaser::prepare_github_release_bin
+      $GHRELEASE_BIN release \
+        --user kudulab \
+        --repo secret-ops \
+        --tag $VERSION \
+        --name $VERSION \
+        --pre-release
+
+      $GHRELEASE_BIN upload \
+        --user kudulab \
+        --repo secret-ops \
+        --tag $VERSION \
+        --name "secret-ops.tar.gz" \
+        --file secret-ops.tar.gz
       ;;
   generate_vault_token)
       set -e
-      vault_token=$(vault token create -ttl=48h -policy=gocd -field token)
+      vault_token=$(vault token create -ttl=48h -policy=gocd -field token -metadata gocd_renew=true)
       secured_token_gocd=$(secret_ops::encrypt_with_gocd_top "${vault_token}")
       echo "Generated token: ${vault_token} and encrypted by GoCD server"
       secret_ops::insert_vault_token_gocd_yaml "${secured_token_gocd}"
       ;;
   *)
       python3 tasks.py "$@"
-      exit $?
       ;;
 esac
 set +e
