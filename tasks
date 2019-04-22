@@ -46,6 +46,8 @@ case "${command}" in
   publish)
       # publish the just released version
       ./tasks package
+      GITHUB_TOKEN=$(vault read -field=token secret/gocd/github_releases)
+      export GITHUB_TOKEN
       VERSION=$(releaser::get_last_git_tagged_version)
       releaser::prepare_github_release_bin
       $GHRELEASE_BIN release \
