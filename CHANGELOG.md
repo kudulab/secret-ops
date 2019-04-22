@@ -1,3 +1,7 @@
+### 0.6.1 (2019-Apr-22)
+
+ * setup publish task
+
 ### 0.6.0 (2019-Apr-22)
 
 * removed obsolete functions without ::
