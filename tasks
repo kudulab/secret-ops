@@ -48,7 +48,7 @@ case "${command}" in
       ./tasks package
       GITHUB_TOKEN=$(vault read -field=token secret/gocd/github_releases)
       export GITHUB_TOKEN
-      VERSION=$(releaser::git_tag_from_changelog)
+      VERSION=$(releaser::get_last_version_from_changelog)
       releaser::prepare_github_release_bin
       $GHRELEASE_BIN release \
         --user kudulab \
