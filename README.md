@@ -6,7 +6,7 @@ This is published only as a reference, it will have little usability in other in
 ## Usage
 
 ```bash
-SECRET_OPS_VERSION="0.6.0"
+SECRET_OPS_VERSION="0.6.3"
 SECRET_OPS_FILE="ops/secret-ops"
 SECRET_OPS_TAR_FILE="ops/secret-ops-${SECRET_OPS_VERSION}.tar.gz"
 
@@ -111,3 +111,19 @@ from ops.secret_ops import *
 
 # Tasks using Click ...
 ```
+
+## License
+
+Copyright 2019 Ewa Czechowska, Tomasz Sętkowski
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

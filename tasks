@@ -2,7 +2,7 @@
 
 set -Eeo pipefail
 
-RELEASER_VERSION="2.0.0"
+RELEASER_VERSION="2.1.0"
 RELEASER_FILE="ops/releaser-${RELEASER_VERSION}"
 
 mkdir -p ops
@@ -19,7 +19,7 @@ case "${command}" in
       releaser::bump_changelog_version "$2" "$3"
       ;;
   verify_version)
-      releaser::verify_version_for_release
+      releaser::verify_release_ready
       ;;
   test_bash)
       bats test/bats/
@@ -40,7 +40,7 @@ case "${command}" in
       tar -cvzf ../secret-ops.tar.gz *
       ;;
   release)
-      releaser::verify_version_for_release
+      releaser::verify_release_ready
       releaser::git_tag_from_changelog
       ;;
   publish)
