@@ -1,3 +1,6 @@
+### 0.7.0 (2019-May-01)
+* added `secret_ops::docker_login`
+
 ### 0.6.3 (2019-Apr-23)
 
  * added license notes

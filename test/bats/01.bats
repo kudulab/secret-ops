@@ -62,3 +62,11 @@ load '/opt/bats-assert/load.bash'
   echo "output: $output"
   assert_equal "$status" 0
 }
+
+@test "secret_ops::docker_login should succeed" {
+  run /bin/bash -c "source src/secret-ops && secret_ops::docker_login"
+  assert_line --partial "Login Succeeded"
+  # this is printed on test failure
+  echo "output: $output"
+  assert_equal "$status" 0
+}
