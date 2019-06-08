@@ -1,3 +1,5 @@
+### 0.8.0 (2019-Jun-08)
+
 ### 0.7.1 (2019-May-01)
  * use `whoami` rather than `$USER` in `secret_ops::docker_login`
 

@@ -9,7 +9,7 @@ fi
 
 mkdir -p ~/.kube
 
-export VAULT_ADDR="${VAULT_ADDR:-https://vault.ai-traders.com:8200}"
+export VAULT_ADDR="${VAULT_ADDR:-https://vault.kudulab.io:8200}"
 
 vault kv get --field=key "secret/k8s/${k8s_user}" > ~/.kube/${k8s_user}.key
 vault kv get --field=user_crt "secret/k8s/${k8s_user}" > ~/.kube/${k8s_user}.crt

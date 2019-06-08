@@ -20,7 +20,7 @@ def get_vault_token():
             return myfile.read()
 
 def _create_vault_client():
-    return hvac.Client(url='https://vault.ai-traders.com:8200', verify='/usr/local/share/ca-certificates/ait.crt',
+    return hvac.Client(url='https://vault.kudulab.io:8200', verify='/usr/local/share/ca-certificates/ait.crt',
                 token=get_vault_token())
 
 def read_vault_kv(path):
