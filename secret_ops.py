@@ -55,13 +55,11 @@ def gocd_encrypt(secret,server='go1'):
     :return:
     """
     with requests.Session() as s:
-        if server == 'go1':
+        if server == 'go1' or server == 'kudu':
             url = 'https://go2-production.kudulab.io:8154'
             s.auth = (getpass.getuser(), read_my_gocd_password())
-        elif server == 'go2':
-            url = 'https://go2.ai-traders.com:8154'
         else:
-            raise ValueError('Invalid gocd server identifier, use go1 or go2')
+            raise ValueError('Invalid gocd server identifier, use go1')
         url = url + '/go/api/admin/encrypt'
         response = s.post(url, verify=False, headers={'Accept': 'application/vnd.go.cd.v1+json'}, json={ 'value': secret })
         if response.status_code != 200:
