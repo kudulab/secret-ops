@@ -13,7 +13,8 @@ pipelines:
           clean_workspace: true
           jobs:
             bash:
-              elastic_profile_id: w.c1.m1024.e5
+              resources:
+                - docker
               tasks:
                 - exec:
                     command: /bin/bash
@@ -21,7 +22,8 @@ pipelines:
                       - -c
                       - ./tasks test_bash
             python:
-              elastic_profile_id: w.c1.m1024.e5
+              resources:
+                - docker
               tasks:
                 - exec:
                     command: /bin/bash
@@ -32,7 +34,8 @@ pipelines:
           clean_workspace: true
           jobs:
             code:
-              elastic_profile_id: w.c1.m1024.e5
+              resources:
+                - docker
               tasks:
                 - exec:
                     command: /bin/bash
@@ -43,7 +46,8 @@ pipelines:
           clean_workspace: true
           jobs:
             github:
-              elastic_profile_id: w.c1.m1024.e5
+              resources:
+                - docker
               tasks:
                 - exec:
                     command: /bin/bash
