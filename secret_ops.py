@@ -56,7 +56,7 @@ def gocd_encrypt(secret,server='go1'):
     """
     with requests.Session() as s:
         if server == 'go1':
-            url = 'https://go.ai-traders.com:8154'
+            url = 'https://go2-production.kudulab.io:8154'
             s.auth = (getpass.getuser(), read_my_gocd_password())
         elif server == 'go2':
             url = 'https://go2.ai-traders.com:8154'

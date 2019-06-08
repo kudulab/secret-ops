@@ -19,7 +19,7 @@ load '/opt/bats-assert/load.bash'
   run /bin/bash -c "source src/secret-ops && secret_ops::encrypt_with_gocd_top mydata"
   refute_line --partial "variable_to_encrypt not set"
   assert_line --partial "AES:"
-  assert_line --partial "Encrypting with gocd server: go.ai-traders.com"
+  assert_line --partial "Encrypting with gocd server: go2-production.kudulab.io"
   # this is printed on test failure
   echo "output: $output"
   assert_equal "$status" 0
